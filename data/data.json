@@ -1,0 +1,25 @@
+{
+  "inventario": {
+    "a": {
+      "sabor": "WatermelonIce 🍉❄️ ",
+      "cantidad": 1
+    },
+    "b": {
+      "sabor": "StrawBerryIce 🍓❄️ ",
+      "cantidad": 0
+    },
+    "c": {
+      "sabor": "BerryBlast 🔵🍒 ",
+      "cantidad": 0
+    },
+    "d": {
+      "sabor": "SoutRaspBerry  🍇🍓 ",
+      "cantidad": 0
+    },
+    "e": {
+      "sabor": "Watermelon mix 🍓🍉 ",
+      "cantidad": 0
+    }
+  },
+  "cash": 190000
+}
