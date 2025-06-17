@@ -10,7 +10,7 @@ function mostrarOpciones() {
 /agregar - Agregar inventario ✅ (indicando letra y cantidad)
 /venta - Registrar venta ❎ (indicando letra y precio)
 /cash - Ver plata obtenida 💰
-/reiniciar - Guardar tanda y reiniciar 🔄
+/reiniciar - Guardar tanda y reiniciar(Cuidado!) 🔄
 /dolar - Ver dólar blue 💵`;
 }
 
