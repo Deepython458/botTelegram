@@ -1,18 +1,16 @@
 {
   "name": "pruebabot",
   "version": "1.0.0",
+  "description": "Bot de Telegram para ventas automatizadas (inventario, ventas, cash y más)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.10.0",
     "express": "^5.1.0",
-    "node-telegram-bot-api": "^0.66.0",
-    "twilio": "^5.7.1"
+    "node-telegram-bot-api": "^0.66.0"
   }
 }
