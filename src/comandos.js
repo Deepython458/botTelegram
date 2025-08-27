@@ -1,4 +1,11 @@
-const { agregarInventario, registrarVenta, obtenerInventario, obtenerCash } = require('./inventario');
+const {
+  agregarMarca,
+  agregarSabor,
+  registrarVenta,
+  obtenerInventario,
+  obtenerCash,
+  setInversion
+} = require('./inventario');
 const { obtenerDolarBlue } = require('./dolar');
 const { reiniciarDatos } = require('./estadisticas');
 
@@ -7,94 +14,89 @@ function mostrarOpciones() {
 
 /opciones - Mostrar comandos 💬
 /inventario - Ver inventario 👁️
-/agregar - Agregar inventario ✅ (indicando letra y cantidad)
-/venta - Registrar venta ❎ (indicando letra y precio)
+/agregarmarca <nombre> - Crear nueva marca 🏷️
+/agregarsabor <letraMarca> <nombreSabor> <cantidad> - Agregar sabor a marca 🧃
+/venta <letraMarca> <numSabor> <precio> - Registrar venta ❎
 /cash - Ver plata obtenida 💰
 /reiniciar - Guardar tanda y reiniciar(Cuidado!) 🔄
-/dolar - Ver dólar blue 💵`;
+/dolar - Ver dólar blue 💵
+/inversion <monto> - Definir Inversión 💸`;
 }
 
 async function manejarMensaje(chatId, mensaje, estados) {
-  mensaje = mensaje.toLowerCase().trim();
+  const partes = mensaje.trim().split(' ');
+  const comando = partes[0].toLowerCase();
 
-  if (!estados[chatId]) estados[chatId] = { paso: null };
+  if (comando === '/opciones') return mostrarOpciones();
 
-  if (estados[chatId].paso === 'agregar') {
-    const [letra, cantidadStr] = mensaje.split(' ');
-    const cantidad = parseInt(cantidadStr, 10);
-
-    if (!letra || isNaN(cantidad)) {
-      estados[chatId].paso = null;
-      return '❌ Formato incorrecto. Volvé a empezar escribiendo /agregar o /opciones para ver comandos.';
-    }
-
-    if (agregarInventario(letra, cantidad)) {
-      estados[chatId].paso = null;
-      return `✅ Se agregaron ${cantidad} unidades de ${obtenerInventario()[letra].sabor}. Total: ${obtenerInventario()[letra].cantidad}`;
-    } else {
-      estados[chatId].paso = null;
-      return '❌ Sabor inválido. Volvé a empezar escribiendo /agregar o /opciones para ver comandos.';
-    }
-  }
-
-  if (estados[chatId].paso === 'venta') {
-    const [letra, precioStr] = mensaje.split(' ');
-    const precio = parseFloat(precioStr);
-
-    if (!letra || isNaN(precio)) {
-      estados[chatId].paso = null;
-      return '❌ Formato incorrecto. Volvé a empezar escribiendo /venta o /opciones para ver comandos.';
-    }
-
-    if (registrarVenta(letra, precio)) {
-      estados[chatId].paso = null;
-      return `✅ Venta registrada: 1 unidad de ${obtenerInventario()[letra].sabor} a $${precio}. Inventario restante: ${obtenerInventario()[letra].cantidad}`;
-    } else {
-      estados[chatId].paso = null;
-      return '❌ No hay unidades disponibles o sabor inválido. Volvé a empezar escribiendo /venta o /opciones para ver comandos.';
-    }
-  }
-
-  if (mensaje === '/opciones') return mostrarOpciones();
-
-  if (mensaje === '/inventario') {
+  if (comando === '/inventario') {
     const inv = obtenerInventario();
-    let texto = 'ɪɴᴠᴇɴᴛᴀʀɪᴏ :\n';
+    let texto = '📦 ɪɴᴠᴇɴᴛᴀʀɪᴏ:\n';
     for (const letra in inv) {
-      texto += `${letra} - ${inv[letra].sabor}: ${inv[letra].cantidad}\n`;
+      texto += `\n🔹 ${letra.toUpperCase()} - ${inv[letra].marca}:\n`;
+      for (const num in inv[letra].sabores) {
+        texto += `   ${num} - ${inv[letra].sabores[num].sabor}: ${inv[letra].sabores[num].cantidad}\n`;
+      }
     }
     return texto;
   }
 
-  if (mensaje === '/agregar') {
-    estados[chatId].paso = 'agregar';
-    return 'Escribí la letra y la cantidad que querés agregar, ej: a 5';
+  if (comando === '/agregarmarca') {
+    if (partes.length < 2) return '❌ Usá: /agregarmarca <nombre>';
+    const nombre = partes.slice(1).join(' ');
+    const { letra, marca } = agregarMarca(nombre);
+    return `✅ Marca agregada: ${marca} (letra asignada: ${letra})`;
   }
 
-  if (mensaje === '/venta') {
-    estados[chatId].paso = 'venta';
-    return 'Escribí la letra del sabor y el precio, ej: b 150';
+  if (comando === '/agregarsabor') {
+    if (partes.length < 4) return '❌ Usá: /agregarsabor <letraMarca> <nombreSabor> <cantidad>';
+    const letraMarca = partes[1];
+    const cantidad = parseInt(partes.pop(), 10);
+    const nombreSabor = partes.slice(2, -1).join(' ');
+
+    if (isNaN(cantidad)) return '❌ Cantidad inválida.';
+
+    const nuevo = agregarSabor(letraMarca, nombreSabor, cantidad);
+    if (!nuevo) return '❌ Marca inválida.';
+
+    return `✅ Sabor agregado a ${letraMarca}: ${nuevo.sabor} (ID: ${nuevo.indice}, Cantidad: ${nuevo.cantidad})`;
   }
 
-  if (mensaje === '/cash') {
+  if (comando === '/venta') {
+    if (partes.length !== 4) return '❌ Usá: /venta <letraMarca> <numSabor> <precio>';
+    const [_, letraMarca, numSabor, precioStr] = partes;
+    const precio = parseFloat(precioStr);
+
+    if (isNaN(precio)) return '❌ Precio inválido.';
+
+    const venta = registrarVenta(letraMarca, numSabor, precio);
+    if (!venta) return '❌ Marca o sabor inválido, o sin stock.';
+
+    return `✅ Venta registrada: 1 unidad de ${venta.sabor} a $${precio}. Restan: ${venta.cantidad}`;
+  }
+
+  if (comando === '/cash') {
     const { total, ganancia } = obtenerCash();
-    let respuesta = `💵 Plata recaudada: $${total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n`;
-    if (ganancia > 0) {
-      respuesta += `🎉 Ganancia: $${ganancia.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
-    } else {
-      respuesta += `📉 Aún no hay ganancia.`;
-    }
-    return respuesta;
+    return `💵 Recaudado: $${total.toLocaleString('es-AR')}\n🎉 Ganancia: $${ganancia.toLocaleString('es-AR')}`;
   }
 
-  if (mensaje === '/dolar') return await obtenerDolarBlue();
+  if (comando === '/dolar') return await obtenerDolarBlue();
 
-  if (mensaje === '/reiniciar') {
+  if (comando === '/reiniciar') {
     reiniciarDatos();
-    return '🔄 Se reinició la ganancia y las ventas. La tanda fue guardada correctamente.';
+    return '🔄 Se reinició la ganancia y las ventas.';
   }
 
-  return 'No entendí. Escribí /opciones para ver los comandos genio.';
+  if (comando === '/inversion') {
+    if (partes.length !== 2) return '❌ Usá: /inversion <monto>';
+    const monto = parseFloat(partes[1]);
+    if (isNaN(monto) || monto <= 0) return '❌ Monto inválido.';
+    setInversion(monto);
+    return `✅ Inversión actualizada a $${monto}`;
+  }
+
+  return 'No entendí. Escribí /opciones para ver los comandos.';
 }
 
 module.exports = { manejarMensaje };
+

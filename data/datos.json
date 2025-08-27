@@ -4,6 +4,21 @@
       "numero": 1,
       "dinero": 220000,
       "fecha": "14/6/2025"
+    },
+    {
+      "numero": 2,
+      "dinero": 212000,
+      "fecha": "21/6/2025"
+    },
+    {
+      "numero": 3,
+      "dinero": 342000,
+      "fecha": "22/7/2025"
+    },
+    {
+      "numero": 4,
+      "dinero": 466000,
+      "fecha": "25/8/2025"
     }
   ]
 }

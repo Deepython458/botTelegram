@@ -1,25 +1,99 @@
 {
   "inventario": {
     "a": {
-      "sabor": "WatermelonIce 🍉❄️ ",
-      "cantidad": 1
+      "marca": "ignite",
+      "sabores": {
+        "1": {
+          "sabor": "WatermelonIce 🍉❄️",
+          "cantidad": 0
+        },
+        "2": {
+          "sabor": "StrawBerryIce 🍓❄️",
+          "cantidad": 0
+        },
+        "3": {
+          "sabor": "BerryBlast 🔵🍒",
+          "cantidad": 0
+        }
+      }
     },
     "b": {
-      "sabor": "StrawBerryIce 🍓❄️ ",
-      "cantidad": 0
+      "marca": "mixer",
+      "sabores": {
+        "1": {
+          "sabor": "Blueberry Watermelon 🔵🍉",
+          "cantidad": 0
+        },
+        "2": {
+          "sabor": "Watermelon B Pop 🍉",
+          "cantidad": 0
+        },
+        "3": {
+          "sabor": "Blueberry Razz Ice 🔵❄️",
+          "cantidad": 0
+        },
+        "4": {
+          "sabor": "RedRaspberry Straw 🍓🍉",
+          "cantidad": 0
+        }
+      }
     },
     "c": {
-      "sabor": "BerryBlast 🔵🍒 ",
-      "cantidad": 0
+      "marca": "elfbar",
+      "sabores": {
+        "1": {
+          "sabor": "BlueBerry razz ice 🔵❄️",
+          "cantidad": 0
+        },
+        "2": {
+          "sabor": "Watermelon ice 🍉❄️",
+          "cantidad": 0
+        },
+        "3": {
+          "sabor": "StrawBerry Watermelon 🍓🍉",
+          "cantidad": 0
+        }
+      }
     },
     "d": {
-      "sabor": "SoutRaspBerry  🍇🍓 ",
-      "cantidad": 0
+      "marca": "lostmary",
+      "sabores": {
+        "1": {
+          "sabor": "Blueberry Razz Ice 🔵❄️",
+          "cantidad": 0
+        },
+        "2": {
+          "sabor": "Watermelon Ice 🍉❄️",
+          "cantidad": 0
+        },
+        "3": {
+          "sabor": "StrawBerryIce 🍓❄️",
+          "cantidad": 0
+        }
+      }
     },
     "e": {
-      "sabor": "Watermelon mix 🍓🍉 ",
-      "cantidad": 0
+      "marca": "rabbeats",
+      "sabores": {
+        "1": {
+          "sabor": "Blueberry Razz Ice 🔵❄️",
+          "cantidad": 0
+        },
+        "2": {
+          "sabor": "Watermelon bg 🍉❄️",
+          "cantidad": 0
+        },
+        "3": {
+          "sabor": "Blueberry Watermelon 🔵🍉",
+          "cantidad": 0
+        },
+        "4": {
+          "sabor": "StrawBerry kiwi 🍓🍉",
+          "cantidad": 0
+        }
+      }
     }
   },
-  "cash": 190000
+  "cash": 0,
+  "inversion": 288385
 }
