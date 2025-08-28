@@ -1,37 +1,40 @@
-const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
+const bodyParser = require('body-parser');
+const TelegramBot = require('node-telegram-bot-api');
 const { manejarMensaje } = require('./src/comandos');
 
-const token = '8128755134:AAHmOGjurcruxuHxBiJXACxBHB-43znOzlw';
-const bot = new TelegramBot(token, { polling: true });
+const token = '8128755134:AAHmOGjurcruxuHxBiJXACxBHB-43znOzlw'; // prueba
+const app = express();
+app.use(bodyParser.json());
 
+// URL pública de Render (ajustá TU_APP por el nombre real de tu servicio)
+const WEBHOOK_URL = `https://bottelegram.onrender.com/8128755134:AAHmOGjurcruxuHxBiJXACxBHB-43znOzlw`;
 
-const estados = {};
+// Inicializamos el bot en modo webhook
+const bot = new TelegramBot(token);
+bot.setWebHook(WEBHOOK_URL);
 
+// Endpoint que recibe actualizaciones de Telegram
+app.post(`/${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
+// Manejo de mensajes (usa tu función de src/comandos.js)
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
-  const texto = msg.text;
+  const texto = msg.text || '';
 
-  if (!texto) return;
+  if (!global.estados) global.estados = {}; // estado en memoria
+  const respuesta = await manejarMensaje(chatId.toString(), texto, global.estados);
 
-  try {
-    const respuesta = await manejarMensaje(chatId, texto, estados);
-    bot.sendMessage(chatId, respuesta, { parse_mode: 'Markdown' });
-  } catch (error) {
-    console.error('Error manejando mensaje:', error);
-    bot.sendMessage(chatId, '❌ Ocurrió un error. Intenta de nuevo.');
+  if (respuesta) {
+    bot.sendMessage(chatId, respuesta);
   }
 });
 
-
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Bot de Telegram corriendo 🚀');
-});
-
+// Render necesita escuchar en un puerto
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en puerto ${PORT}`);
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
-
